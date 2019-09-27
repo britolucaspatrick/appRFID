@@ -1,13 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:apprfid/Utils/alert.dart';
 import 'package:apprfid/Utils/const.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Model/Produto.dart';
 
 class CadProduto extends StatefulWidget {
@@ -26,6 +23,8 @@ class _CadProdutoState extends State<CadProduto> {
   }
 
   Future<String> postProduto (Produto prod) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String URL = prefs.getString('URL');
     await http.post(URL + "/Produto",
         body: {
           'ValueTag': '${prod.ValueTag}',

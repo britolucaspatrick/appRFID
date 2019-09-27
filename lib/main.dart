@@ -1,9 +1,10 @@
 import 'dart:convert' as convert;
 import 'package:apprfid/CadProduto.dart';
+import 'package:apprfid/ConfigApp.dart';
 import 'package:apprfid/Utils/alert.dart';
-import 'package:apprfid/Utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,6 +56,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     CadProduto()));
               },
             ),
+            new ListTile(
+              title: new Text("Config. App"),
+              onTap: (){
+                Navigator.push(context,  MaterialPageRoute(builder: (context) =>
+                  ConfigApp()));
+              },
+            ),
           ],
         ),
       ),
@@ -79,18 +87,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<String> getProdutos() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String URL = prefs.getString('URL');
     var response = await http.get(URL + "Produto",
         headers: { "Accept": "application/json" });
     if (response.statusCode == 200) {
       data = convert.jsonDecode(response.body);
     } else {
-      print("Request failed with status: ${response.statusCode}.");
+      new Alert().showAlertDialog(context, "Request failed with status: ${response.statusCode}.");
     }
   }
 
   _exportProdutos() {
     getProdutos();
-    //co
   }
 
 }
