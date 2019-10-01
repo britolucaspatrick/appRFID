@@ -1,3 +1,4 @@
+import 'package:apprfid/Utils/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,12 @@ class _ConfigAppState extends State<ConfigApp> {
   @override
   void initState() {
     super.initState();
+    _getSharedPreferences();
+  }
+
+  _getSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    campo1.text = prefs.getString('URL');
   }
 
   @override
@@ -43,7 +50,15 @@ class _ConfigAppState extends State<ConfigApp> {
   }
 
   _saveURLSharedPrefences() async  {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('URL', campo1.text.toString());
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('URL', campo1.text.toString())
+          .then((onValue)
+          {
+            new Alert().showAlertDialog(context, "Salvo com sucesso. \n"
+                "URL: " + prefs.getString('URL'));
+          }).catchError((onError)
+          {
+            new Alert().showAlertDialog(context, onError.toString());
+          });
   }
 }

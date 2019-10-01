@@ -1,5 +1,4 @@
 import 'package:apprfid/Utils/alert.dart';
-import 'package:apprfid/Utils/const.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,11 +30,17 @@ class _CadProdutoState extends State<CadProduto> {
           'CodBarras': '${prod.CodBarras}'},
         headers: {
           "Accept": "application/json"
+        })
+        .then((onValue)
+        {
+          new Alert().showAlertDialog(context, "Salvo com sucesso.");
+          campo1 .text = "";
+          campo2 .text = "";
+        })
+        .catchError((onError)
+        {
+          new Alert().showAlertDialog(context, onError.toString());
         });
-      campo1 .text = "";
-      campo2 .text = "";
-
-      new Alert().showAlertDialog(context, "Salvo com sucesso.");
   }
 
   @override

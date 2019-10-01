@@ -89,13 +89,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<String> getProdutos() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String URL = prefs.getString('URL');
-    var response = await http.get(URL + "Produto",
+    var response = await http.get(URL + "/Produto",
         headers: { "Accept": "application/json" });
-    if (response.statusCode == 200) {
-      data = convert.jsonDecode(response.body);
-    } else {
-      new Alert().showAlertDialog(context, "Request failed with status: ${response.statusCode}.");
-    }
+    setState(() {
+      if (response.statusCode == 200) {
+        data = convert.jsonDecode(response.body);
+      } else {
+        new Alert().showAlertDialog(context, "Request failed with status: ${response.statusCode}.");
+      }
+    });
   }
 
   _exportProdutos() {
