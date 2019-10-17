@@ -1,6 +1,7 @@
 import 'dart:convert' as convert;
 import 'package:apprfid/CadProduto.dart';
 import 'package:apprfid/ConfigApp.dart';
+import 'package:apprfid/Service/ProdutoService.dart';
 import 'package:apprfid/Utils/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -104,11 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               onChanged: (String val){
-                if (val.length == 10){
-                  setState(() => _addQuantidadeItem(val));
-                }else{
-                  setState(() => _inputIsValid = false);
-                }
+                _addQuantidadeItem(val, context);
               },
             ),
           ),
@@ -136,14 +133,14 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _addQuantidadeItem(String ValueTag){
-    dados.forEach((value) =>
-    {
-      if (value["ValueTag"].toString() == ValueTag) {
-        value["Quantidade"] = (int.parse(value["Quantidade"]) + 1).toString(),
-        Fluttertoast.showToast( msg: 'entrou')
-      }
-    });
+  _addQuantidadeItem(String ValueTag, BuildContext context){
+    if (ValueTag.length == 10){
+      ProdutoService().IncrementTag(ValueTag);
+
+      setState(() {
+        getProdutos();
+      });
+    }
   }
 
   Future<String> getProdutos() async {
@@ -152,13 +149,11 @@ class _MyHomePageState extends State<MyHomePage> {
     await http.get(URL + "/Produto",
         headers: { "Accept": "application/json" }).then((value)
     {
-      setState(() {
         if (value.statusCode == 200) {
           dados = convert.jsonDecode(value.body);
         } else {
           Fluttertoast.showToast( msg: 'Error status-code: ${value.statusCode}');
         }
-      });
     }).catchError((error)
     {
       Fluttertoast.showToast( msg: 'Error: ${error.toString()}');
@@ -166,7 +161,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _exportProdutos() {
-    getProdutos();
+    setState(() {
+      getProdutos();
+    });
   }
 
 }
