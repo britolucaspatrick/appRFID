@@ -123,20 +123,13 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          _exportProdutos();
-          return true;
-        },
-        child: Icon(Icons.cloud_upload),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
   _addQuantidadeItem(String ValueTag, BuildContext context){
     if (ValueTag.length == 10){
-      ProdutoService().IncrementTag(ValueTag);
-
+      ProdutoService().updateQuantidade(ValueTag);
+      ValueTag = "";
       setState(() {
         getProdutos();
       });

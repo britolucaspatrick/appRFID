@@ -60,7 +60,9 @@ class _CadProdutoState extends State<CadProduto> {
   }
 
   void postProduto(Produto produto, BuildContext context) {
-    new Alert().showAlertDialog(context, ProdutoService().postProduto(produto).toString());
+    produto.Quantidade = false;
+    ProdutoService().postProduto(produto);
+    new Alert().showAlertDialog(context, "Salvo com sucesso.");
     campo1.text = "";
     campo2.text = "";
   }

@@ -2,7 +2,7 @@ class Produto {
   int ID_Produto;
   String ValueTag;
   String CodBarras;
-  int Quantidade;
+  bool Quantidade;
 
   Produto(){}
 }

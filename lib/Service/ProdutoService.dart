@@ -13,50 +13,38 @@ class ProdutoService {
     });
 
     URL = prefs.getString('URL');
-
   }
 
   Future<String> postProduto (Produto prod) async {
+    String str = "";
+
     await http.post(URL + "/Produto",
         body: {
           'ValueTag': '${prod.ValueTag}',
-          'CodBarras': '${prod.CodBarras}'},
+          'CodBarras': '${prod.CodBarras}',
+          'Quantidade': '${prod.Quantidade}'
+        },
         headers: {
           "Accept": "application/json"
         })
         .then((onValue)
     {
-      return "Salvo com sucesso.";
+      str = "Salvo com sucesso";
     })
         .catchError((onError)
     {
-      return onError.toString();
+      str = onError.toString();
     });
+
+    return str;
   }
 
-  void IncrementTag(String ValueTag) {
-    Produto prod;
-    http.get(URL + "/values/${ValueTag}",
-        headers: { "Accept": "application/json" })
-        .then((value)
-    {
-      if (value.statusCode == 200) {
-        prod = convert.jsonDecode(value.body);
-
-        prod.Quantidade == null || prod.Quantidade == 0 ? prod.Quantidade = 1 : prod.Quantidade++;
-
-        http.post(URL + "/Produto",
-            body: {
-              'ID_Produto': '${prod.ID_Produto}',
-              'Qualidade': '${prod.Quantidade}',
-              'ValueTag': '${prod.ValueTag}',
-              'CodBarras': '${prod.CodBarras}'},
-            headers: {
-              "Accept": "application/json"
-            });
-      }
-    });
+  void updateQuantidade (String ValueTag) {
+    http.put(URL + "/values/${ValueTag}",
+        headers: { "Accept": "application/json" }).then((value){print(value);}).catchError((error){print(error);});
   }
+
+
 
 }
 
